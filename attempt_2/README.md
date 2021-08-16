@@ -27,6 +27,8 @@ Tada! access elements in an array, without knowing the type of the array! (We us
 
 I got that working! and it compiled!
 
+Now when I call the function I cast the recieving type correctly.
+
 ```c
 pos_t* wanted_component = get_component(wanted_index, sizeof(pos_t), unknown_type_array);
 ```
