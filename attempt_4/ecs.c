@@ -50,10 +50,13 @@ int main(void)
     archetype[0].type = "pos";
 
     set_item(0, sizeof(pos_t), archetype[0].components, &(pos_t){0.0f, 0.0f, 1.0f});
-
+    set_item(1, sizeof(pos_t), archetype[0].components, &(pos_t){1.0f, 9.4f, 1.0f});
 
     archetype[1].components = new_generic_array(sizeof(int), num_components);
     archetype[1].type = "int";
+
+    set_item(0, sizeof(int), archetype[1].components, (int)12);
+    set_item(1, sizeof(int), archetype[1].components, (int)13);
 
     for (int i = 0; i < num_components; i++)
     {
