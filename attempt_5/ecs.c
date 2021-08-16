@@ -47,13 +47,13 @@ void* get_aspect_type(aspect_t* archetype, char* type, int archetype_length)
     return NULL;
 }
 
-void* search_archetype(int component_index, char* type, size_t type_size, aspect_t* archetype, int num_types_in_archetype)
+void* search_archetype(int component_index, char* type, size_t type_size, aspect_t* archetype, int num_aspects_in_archetype)
 {
     // loop through array of aspects 
-    for (int i = 0; i < num_types_in_archetype; i++)
+    for (int i = 0; i < num_aspects_in_archetype; i++)
     {
         // check if current aspect is correct
-        if (strcmp(archetype[i].type, type))
+        if (strcmp(archetype[i].type, type) == 0)
         {
             // if current aspect is correct, then, search through generic array and get component at index
             return get_item(component_index, type_size, archetype[i].components);
@@ -65,18 +65,18 @@ void* search_archetype(int component_index, char* type, size_t type_size, aspect
 
 int main(void)
 {
-    int num_components = 2;
+    int component_column_depth = 2;
 
     // archetype is a combination of aspects (component types)
     aspect_t* archetype = malloc(sizeof(aspect_t) * 2);
 
-    archetype[0].components = new_generic_array(sizeof(pos_t), num_components);
+    archetype[0].components = new_generic_array(sizeof(pos_t), component_column_depth);
     archetype[0].type = "pos";
 
     set_item(0, sizeof(pos_t), archetype[0].components, &(pos_t){2.231f, 0.0f, 1.0f});
     set_item(1, sizeof(pos_t), archetype[0].components, &(pos_t){1.0f, 9.4f, 1.0f});
 
-    archetype[1].components = new_generic_array(sizeof(int), num_components);
+    archetype[1].components = new_generic_array(sizeof(int), component_column_depth);
     archetype[1].type = "int";
 
     int tmp1 = 12;
@@ -84,22 +84,14 @@ int main(void)
     set_item(0, sizeof(int), archetype[1].components, &tmp1);
     set_item(1, sizeof(int), archetype[1].components, &tmp2);
 
-    for (int i = 0; i < 2; i++)
+    // for each entity in archetype
+    for (int entity_index = 0; entity_index < component_column_depth; entity_index++)
     {
-        // check if current aspect is correct
-        if (strcmp(archetype[i].type, "pos"))
-        {
-            // if current aspect is correct, then, search through generic array and get component at index
-            pos_t* position = get_item(0, sizeof(pos_t), archetype[i].components);
-
-            printf("pos (%f, %f, %f)\n", position->x, position->y, position->z);
-        }
+        pos_t* position = search_archetype(entity_index, "pos", sizeof(pos_t), archetype, 2);
+        int* integer = search_archetype(entity_index, "int", sizeof(int), archetype, 2);
+        
+        printf("pos (%f, %f, %f)\n", position->x, position->y, position->z);
     }
-
-    // get access to certain components
-    // pos_t* position = search_archetype(0, "pos", sizeof(pos_t), archetype, 2);
-    // int* integer = search_archetype(0, "int", sizeof(int), archetype, 2);
-
     
     // free memory
     free(archetype[0].components);
