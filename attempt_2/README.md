@@ -45,7 +45,7 @@ temp_known_type[wanted_index] = (pos_t){0.0, 0.0, 0.0};
 
 I casted the array to its type. then I could set the info in the array using the default iterator `[]`... but this wasnt going to work since later I will have to access each element without knowing the type of the array.
 
-In the end this is what I figured out (with help form @phyrolizer on Discord)
+In the end this is what I figured out (with help form @phyrolizer on Discord). I get a pointer to a spot in the components array using the "get_component" function. I then use memcpy, to paste in the data into the pointer to the element in the array, and memcpy takes a size <- memcpy which solved all my problems!
 
 ```c
 void set_component(int index, size_t size, void* unkown_type_array, void* data)
@@ -74,3 +74,4 @@ You can compile my code an run it uisng whatever C compiler you use. It will pri
 ```
 pos is (0.000000, 0.000000, 0.000000)
 ```
+
