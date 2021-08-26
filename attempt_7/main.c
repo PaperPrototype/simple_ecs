@@ -50,7 +50,7 @@ int main(void)
 	// debug
 	print_positions_system(archetype1->aspects[0].data, MAX_COMPONENTS);
 
-	// THESE ARE REDUNDANT and we need a way to query for archetypes and get back desired archetypes
+	// THESE ARE REDUNDANT and we need a way to query for archetypes and get back desired component arrays
 	// debug
 	print_positions_system(archetype->aspects[0].data, MAX_COMPONENTS);
 
@@ -60,7 +60,7 @@ int main(void)
 	// debug
 	print_positions_system(archetype->aspects[0].data, MAX_COMPONENTS);
 	
-	
+
 	free_archetype(archetype);
 	free_archetype(archetype1);
 }
