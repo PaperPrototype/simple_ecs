@@ -16,6 +16,12 @@ typedef struct archetype
 	int count;
 } archetype_t;
 
+typedef struct world
+{
+	archetype_t* archetypes;
+	int count;
+} world_t;
+
 typedef struct float3
 {
 	float x, y, z;
@@ -37,6 +43,8 @@ aspect_t set_aspect(size_t size, char* type, int num_components)
 	// give back aspect
 	return aspect;
 }
+
+world_t* new_world();
 
 archetype_t* new_archetype(int count)
 {
@@ -88,39 +96,4 @@ void print_positions_system(pos_t* positions, int num_components)
 	}
 
 	printf("\n");
-}
-
-int main(void)
-{
-	archetype_t* archetype = new_archetype(3);
-	archetype->aspects[0] = set_aspect(sizeof(pos_t), "pos", MAX_COMPONENTS);
-	archetype->aspects[1] = set_aspect(sizeof(int), "int", MAX_COMPONENTS);
-	archetype->aspects[2] = set_aspect(sizeof(vel_t), "vel", MAX_COMPONENTS);
-
-	// set component data.
-	for (int i = 0; i < MAX_COMPONENTS; i++)
-	{
-		// set positions
-		pos_t* positions = archetype->aspects[0].data;
-		positions[i] = (pos_t){0.1, 3.4, 1};
-
-		// set velocities
-		vel_t* velocities = archetype->aspects[2].data;
-		velocities[i] = (vel_t){2.3, 1.5, 0.9};
-
-		// set ints
-		int* ints = archetype->aspects[2].data;
-		ints[i] = (int)1;
-	}
-
-	// debug
-	print_positions_system(archetype->aspects[0].data, MAX_COMPONENTS);
-
-	// increase by velocities
-	add_velocities_system(archetype->aspects[0].data, archetype->aspects[2].data, MAX_COMPONENTS);
-
-	// debug
-	print_positions_system(archetype->aspects[0].data, MAX_COMPONENTS);
-	
-	free_archetype(archetype);
 }
