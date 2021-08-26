@@ -27,6 +27,24 @@ int* integers = (int*)get_components(archetype, "int", 2);
 increase_y_system(positions, integers, 2);
 ```
 
+Now with that fixed I made a simple function that iterates over each component and adds to the y value.
 
+```c
+void increase_y_system(pos_t* positions, int* integers, int num_elements)
+{
+    for (int i = 0; i < num_elements; i++)
+    {
+        positions[i].y += integers[i];
+    }
+}
+```
 
-Now with that fixed I made a simple function that iterates over each component and adds to its y value.
+We pass in the component arrays to the `increase_y_system` manually 
+
+```c
+pos_t* positions = (pos_t*)get_components(archetype, "pos", 2);
+int* integers = (int*)get_components(archetype, "int", 2);
+
+// simple funciton that iterates over components
+increase_y_system(positions, integers, 2);
+```
