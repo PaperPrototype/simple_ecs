@@ -33,21 +33,21 @@ void set_item(int index, size_t size, void* unkown_type_array, void* data)
     memcpy(unknown_type, data, size);
 }
 
-// gets an aspect (component type) based on its type name
-void* get_aspect_type(aspect_t* archetype, char* type, int archetype_length)
+// gets an aspect's component array based on the type name
+void* get_components(aspect_t* archetype, char* type, int archetype_length)
 {
     for (int i = 0; i < archetype_length; i++)
     {
-        if (strcmp(archetype[i].type, type))
+        if (strcmp(archetype[i].type, type) == 0)
         {
-            return &archetype[i];
+            return archetype[i].components;
         }
     }
-    
+
     return NULL;
 }
 
-void* search_archetype(int component_index, char* type, size_t type_size, aspect_t* archetype, int num_aspects_in_archetype)
+void* get_component(int component_index, char* type, size_t type_size, aspect_t* archetype, int num_aspects_in_archetype)
 {
     // loop through array of aspects 
     for (int i = 0; i < num_aspects_in_archetype; i++)
@@ -61,6 +61,14 @@ void* search_archetype(int component_index, char* type, size_t type_size, aspect
     }
 
     return NULL;
+}
+
+void increase_y_system(pos_t* positions, int* integers, int num_elements)
+{
+    for (int i = 0; i < num_elements; i++)
+    {
+        positions[i].y += integers[i];
+    }
 }
 
 int main(void)
@@ -83,16 +91,22 @@ int main(void)
     int tmp2 = 13;
     set_item(0, sizeof(int), archetype[1].components, &tmp1);
     set_item(1, sizeof(int), archetype[1].components, &tmp2);
+    
+    pos_t* positions = (pos_t*)get_components(archetype, "pos", 2);
+    int* integers = (int*)get_components(archetype, "int", 2);
+
+    // simple funciton that iterates over components
+    increase_y_system(positions, integers, 2);
 
     // for each entity in archetype
     for (int entity_index = 0; entity_index < component_column_depth; entity_index++)
     {
-        pos_t* position = search_archetype(entity_index, "pos", sizeof(pos_t), archetype, 2);
-        int* integer = search_archetype(entity_index, "int", sizeof(int), archetype, 2);
+        pos_t* position = get_component(entity_index, "pos", sizeof(pos_t), archetype, 2);
+        int* integer = get_component(entity_index, "int", sizeof(int), archetype, 2);
         
         printf("pos (%f, %f, %f)\n", position->x, position->y, position->z);
     }
-    
+
     // free memory
     free(archetype[0].components);
     free(archetype[1].components);
