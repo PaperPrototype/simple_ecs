@@ -31,6 +31,7 @@ void vec_grow(void* vec, size_t type_size, int current_amount, int grow_amount)
 	vec = new;
 }
 
+/*
 int main(void)
 {
 	int* integers = vec_new(sizeof(int), 2);
@@ -51,3 +52,4 @@ int main(void)
 	printf("%i\n", integers[2]);
 	printf("%i\n", integers[3]);
 }
+*/

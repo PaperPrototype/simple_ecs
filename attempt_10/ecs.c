@@ -56,7 +56,26 @@ void ecs_world_add_arch(world_t* world, arch_t arch)
 	world->cur += 1;
 }
 
-void ecs_free_world(world_t* world);
+void ecs_free_world(world_t* world)
+{
+	arch_t* arch = world->archetypes;
+	for (int a_i = 0; arch != NULL; a_i++)
+	{
+		aspect_t* aspect = arch->aspects;
+		for (int asp_i = 0; aspect != NULL; asp_i++)
+		{
+			free(aspect->data);
+
+			++aspect;
+		}
+
+		free(arch->aspects);
+
+		++arch;
+	}
+
+	free(world->archetypes);
+}
 
 arch_t ecs_new_arch(int num_types)
 {
@@ -65,6 +84,8 @@ arch_t ecs_new_arch(int num_types)
 	arch.num = num_types;
 	arch.max = CHUNK_SIZE;
 	arch.cur = 0;
+
+	return arch;
 }
 
 aspect_t ecs_new_aspect(char* type, size_t type_size)
@@ -98,16 +119,23 @@ void* ecs_get_components(arch_t* arch, char* type, size_t type_size)
 
 int main(void)
 {
+	printf("new world");
 	world_t* world = ecs_new_world();
 
+	printf("new archetype");
 	arch_t archetype1 = ecs_new_arch(2);
-
+	printf("set aspects");
 	archetype1.aspects[0] = ecs_new_aspect("pos", sizeof(pos_t));
 	archetype1.aspects[1] = ecs_new_aspect("rot", sizeof(rot_t));
 
+	printf("add archetype to world");
 	ecs_world_add_arch(world, archetype1);
 
+	printf("got component arrays");
+	
 	pos_t* positions = ecs_get_components(&archetype1, "pos", sizeof(pos_t));
 	rot_t* rotations = ecs_get_components(&archetype1, "rot", sizeof(rot_t));
 	
+	printf("freed world");
+	ecs_free_world(world);
 }
