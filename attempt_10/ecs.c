@@ -32,7 +32,7 @@ typedef struct world
 
 world_t* ecs_new_world()
 {
-	world_t* world = malloc(sizeof(world));
+	world_t* world = malloc(sizeof(world_t));
 	world->archetypes = malloc(sizeof(arch_t) * CHUNK_SIZE);
 	world->max = CHUNK_SIZE;
 	world->cur = 0;
@@ -47,7 +47,7 @@ void ecs_world_add_arch(world_t* world, arch_t arch)
 	{
 		// grow array (aka vec)
 		vec_grow(world->archetypes, sizeof(arch_t), world->cur, CHUNK_SIZE);
-		// increase max since array has grown
+		// increase max (aka, array size) since array has grown
 		world->max += CHUNK_SIZE;
 	}
 
@@ -58,32 +58,46 @@ void ecs_world_add_arch(world_t* world, arch_t arch)
 
 void ecs_free_world(world_t* world)
 {
+	// arhcetypes array
 	arch_t* arch = world->archetypes;
-	int arch_count = world->cur;
-	for (int a_i = 0; arch != NULL; a_i++)
-	{
+	// foreach malloc'd archetype
+	for (int arch_i = 0; arch_i < world->cur; arch_i++)
+	{	
+		// aspects in archetype
 		aspect_t* aspect = arch->aspects;
-		for (int asp_i = 0; aspect != NULL; asp_i++)
+		// foreach aspect
+		for (int asp_i = 0; asp_i < arch->num; asp_i++)
 		{
+			// free the aspects data
 			free(aspect->data);
 
+			// next aspect
 			++aspect;
 		}
 
+		// free aspects
 		free(arch->aspects);
 
+		// next archetype
 		++arch;
 	}
 
+	// free archetypes
 	free(world->archetypes);
+
+	free(world);
 }
 
 arch_t ecs_new_arch(int num_types)
 {
 	arch_t arch;
-	arch.aspects = malloc(sizeof(arch_t) * num_types);
+	arch.aspects = malloc(sizeof(aspect_t) * num_types);
+	// num types in archetype
 	arch.num = num_types;
+
+	// max array size for components
 	arch.max = CHUNK_SIZE;
+	// current number of components
 	arch.cur = 0;
 
 	return arch;
@@ -100,7 +114,7 @@ aspect_t ecs_new_aspect(char* type, size_t type_size)
 
 aspect_t* ecs_get_aspect(arch_t* arch, char* type)
 {
-	for (int i = 0; i < arch->cur; i++)
+	for (int i = 0; i < arch->num; i++)
 	{
 		if (strcmp(arch->aspects[i].type, type) == 0)
 		{
@@ -108,34 +122,43 @@ aspect_t* ecs_get_aspect(arch_t* arch, char* type)
 		}
 	}
 
+	printf("aspect not found! returning NULL (void*) aspect");
 	return NULL;
 }
 
-void* ecs_get_components(arch_t* arch, char* type, size_t type_size)
+void* ecs_get_components(arch_t* arch, char* type)
 {
-	aspect_t* aspect = ecs_get_aspect(arch, type);
+	aspect_t* aspect = arch->aspects; // = ecs_get_aspect(arch, type);
 
-	return aspect->data;
+	for (int i = 0; i < arch->num; i++)
+	{
+		if (strcmp(aspect[i].type, type) == 0)
+		{
+			return aspect[i].data;
+		}
+	}
+
+	printf("aspect and its components not found! returning NULL (void*) component array ");
+	return NULL;
 }
 
 int main(void)
 {
-	printf("new world");
+	printf("new world\n");
 	world_t* world = ecs_new_world();
-
-	printf("new archetype");
+	
+	printf("new archetype\n");
 	arch_t archetype1 = ecs_new_arch(2);
-	printf("set aspects");
+	printf("set aspects\n");
 	archetype1.aspects[0] = ecs_new_aspect("pos", sizeof(pos_t));
 	archetype1.aspects[1] = ecs_new_aspect("rot", sizeof(rot_t));
 
-	printf("add archetype to world");
+	printf("add archetype to world\n");
 	ecs_world_add_arch(world, archetype1);
-
-	printf("got component arrays");
 	
-	pos_t* positions = ecs_get_components(&archetype1, "pos", sizeof(pos_t));
-	rot_t* rotations = ecs_get_components(&archetype1, "rot", sizeof(rot_t));
+	printf("get component arrays\n");
+	pos_t* positions = ecs_get_components(&archetype1, "pos");
+	rot_t* rotations = ecs_get_components(&archetype1, "rot");
 	
 	printf("freed world");
 	ecs_free_world(world);
