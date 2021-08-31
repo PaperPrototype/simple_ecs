@@ -8,19 +8,25 @@ int main(void)
 	archetype->aspects[1] = set_aspect(sizeof(int), "int", MAX_COMPONENTS);
 	archetype->aspects[2] = set_aspect(sizeof(vel_t), "vel", MAX_COMPONENTS);
 
-	// SET COMPONENT DATA
+	// get component arrays + cast to type
+
+	// archetype->aspects[0].type == "pos"
+	pos_t* positions = archetype->aspects[0].data;
+	// archetype->aspects[0].type == "vel"
+	vel_t* velocities = archetype->aspects[2].data;
+	// archetype->aspects[0].type == "int"
+	int* ints = archetype->aspects[2].data;
+
+	// loop over component arrays
 	for (int i = 0; i < MAX_COMPONENTS; i++)
 	{
-		// set positions
-		pos_t* positions = archetype->aspects[0].data;
+		// set position
 		positions[i] = (pos_t){0.1, 3.4, 1};
 
-		// set velocities
-		vel_t* velocities = archetype->aspects[2].data;
+		// set velocitie
 		velocities[i] = (vel_t){2.3, 1.5, 0.9};
 
-		// set ints
-		int* ints = archetype->aspects[2].data;
+		// set int
 		ints[i] = (int)1;
 	}
 
@@ -60,7 +66,7 @@ int main(void)
 	// debug
 	print_positions_system(archetype->aspects[0].data, MAX_COMPONENTS);
 	
-
+	// free memory
 	free_archetype(archetype);
 	free_archetype(archetype1);
 }

@@ -11,12 +11,3 @@ void* get_item(int index, size_t size, void* unknown_type_array)
     // return &unknown_type_array[index * size];
     return (char*)unknown_type_array + (index * size);
 }
-
-void set_item(int index, size_t size, void* unkown_type_array, void* data)
-{
-    // get the component
-    void* unknown_type = get_item(index, size, unkown_type_array);
-
-    // set the component data
-    memcpy(unknown_type, data, size);
-}

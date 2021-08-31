@@ -16,12 +16,6 @@ typedef struct archetype
 	int count;
 } archetype_t;
 
-typedef struct world
-{
-	archetype_t* archetypes;
-	int count;
-} world_t;
-
 typedef struct float3
 {
 	float x, y, z;
@@ -43,8 +37,6 @@ aspect_t set_aspect(size_t size, char* type, int num_components)
 	// give back aspect
 	return aspect;
 }
-
-world_t* new_world();
 
 archetype_t* new_archetype(int count)
 {
