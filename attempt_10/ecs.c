@@ -59,6 +59,7 @@ void ecs_world_add_arch(world_t* world, arch_t arch)
 void ecs_free_world(world_t* world)
 {
 	arch_t* arch = world->archetypes;
+	int arch_count = world->cur;
 	for (int a_i = 0; arch != NULL; a_i++)
 	{
 		aspect_t* aspect = arch->aspects;
