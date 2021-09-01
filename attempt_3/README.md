@@ -1,4 +1,4 @@
-The goal here was to make a generic usable library for generic arrays.
+The goal here was to separate out a generic usable library for my generic arrays.
 
 When I recieve a data from `get_item` I could have done this
 
