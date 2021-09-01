@@ -53,7 +53,7 @@ void ecs_world_add_arch(world_t* world, arch_t arch)
 		// increase max (aka, array size) since array has grown
 		world->max += CHUNK_SIZE;
 	}
-
+	
 	// add archetype
 	world->archetypes[world->cur] = arch;
 	world->cur += 1;
@@ -89,7 +89,7 @@ void ecs_free_world(world_t* world)
 			++aspect;
 		}
 
-		printf("ecs free world/")
+		printf("ecs free world/freeing aspects\n");
 		// free aspects
 		free(arch->aspects);
 
@@ -97,9 +97,11 @@ void ecs_free_world(world_t* world)
 		++arch;
 	}
 
+	printf("ecs free world/freeing archetypes\n");
 	// free archetypes
 	free(world->archetypes);
 
+	printf("ecs free world/freeing world\n");
 	// free world
 	free(world);
 }
@@ -177,23 +179,25 @@ int main(void)
 
 	// testing the capability's of the "vec_grow" function by adding many archetypes
 	printf("testing growable vector capabilitys\n");
-	arch_t arch2 = ecs_new_arch(0);
+	arch_t arch2 = ecs_new_arch(1);
 	ecs_world_add_arch(world, arch2);
 
-	arch_t arch3 = ecs_new_arch(0);
+	arch_t arch3 = ecs_new_arch(1);
 	ecs_world_add_arch(world, arch3);
-
-	arch_t arch4 = ecs_new_arch(0);
+	
+	arch_t arch4 = ecs_new_arch(1);
 	ecs_world_add_arch(world, arch4);
-
-	arch_t arch5 = ecs_new_arch(0);
+	
+	/*
+	arch_t arch5 = ecs_new_arch(1);
 	ecs_world_add_arch(world, arch5);
 
-	arch_t arch6 = ecs_new_arch(0);
+	arch_t arch6 = ecs_new_arch(1);
 	ecs_world_add_arch(world, arch6);
 
-	arch_t arch7 = ecs_new_arch(0);
+	arch_t arch7 = ecs_new_arch(1);
 	ecs_world_add_arch(world, arch7);
+	*/
 	
 	ecs_free_world(world);
 }

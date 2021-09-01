@@ -15,7 +15,7 @@ void* vec_get(int index, size_t type_size, void* vec)
     return (char*)vec + (index * type_size);
 }
 
-/* CAUSES SEGFAULT (also not essential, can still work without this)
+// CAUSES SEGFAULT (also not essential, can still work without this)
 // set element in array to data
 void vec_set(int index, size_t type_size, void* vec, void* data)
 {
@@ -25,7 +25,6 @@ void vec_set(int index, size_t type_size, void* vec, void* data)
     // copy data into vec type address
     memcpy(unknown, data, type_size);
 }
-*/
 
 // allocate new array, memcpy previous contents into new array, free old array, set old pointer to new array
 void vec_grow(void* vec, size_t type_size, int current_amount, int grow_amount)
@@ -47,12 +46,14 @@ int main(void)
 {
 	int* integers = vec_new(sizeof(int), 2);
 
-	integers[0] = 1;
-	integers[1] = 3;
+	int integer = 1;
+	int integer2 = 2;
+	vec_set(0, sizeof(int), integers, &integer);
+	vec_set(1, sizeof(int), integers, &integer2);
 
 	printf("%i\n", integers[0]);
 	printf("%i\n", integers[1]);
-
+	
 	vec_grow(integers, sizeof(int), 2, 2);
 
 	integers[2] = 4;

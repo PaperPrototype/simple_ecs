@@ -35,25 +35,17 @@ void set_component(int index, size_t size, void* unkown_type_array, void* data)
 
 int main(void)
 {
-    int type_size = sizeof(pos_t);
     int wanted_index = 2;
 
-    void* unknown_type_array = malloc(type_size * MAX_COMPONENTS);
+    void* unknown_type_array = malloc(sizeof(pos_t) * MAX_COMPONENTS);
 
     // pos_t* temp_known_type = unknown_type_array;
     // temp_known_type[wanted_index] = (pos_t){0.0, 0.0, 0.0};
 
-    // create component
-    void* temp_position = malloc(type_size);
-    *(pos_t*)temp_position = (pos_t){0.0, 0.0, 0.0};
-
     // set the component
-    set_component(wanted_index, type_size, unknown_type_array, temp_position);
-
-    // free temp component
-    free(temp_position);
-
-    pos_t* wanted_component = get_component(wanted_index, type_size, unknown_type_array);
+    set_component(wanted_index, sizeof(pos_t), unknown_type_array, &(pos_t){0.0, 0.0, 0.0});
+    
+    pos_t* wanted_component = get_component(wanted_index, sizeof(pos_t), unknown_type_array);
 
     printf("pos is (%f, %f, %f)", wanted_component->x, wanted_component->y, wanted_component->z);
 
