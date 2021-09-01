@@ -31,7 +31,7 @@ void* vec_get(int index, size_t type_size, void* vec)
 }
 ```
 
-I also discovered why one of my previous ECS's was giving me a segfault. The below function was to blame!
+For some reason the below function was to blame... (But then later I got it to work... I dunno)
 
 ```c
 void vec_set(int index, size_t type_size, void* vec, void* data)
@@ -44,4 +44,6 @@ void vec_set(int index, size_t type_size, void* vec, void* data)
 }
 ```
 
-After realizeing this I thought about my previous ECS's. The ones that were working (and didn't give a segfault) were NOT using the `vec_set` (previously called "set_item")! Now I can forge ahead with this neew tool and continue on my journey!
+(this function was previously called "set_item")
+
+Now I can forge ahead with this neew tool and continue on my journey!
