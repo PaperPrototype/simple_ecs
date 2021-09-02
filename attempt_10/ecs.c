@@ -183,6 +183,18 @@ void* ecs_get_components(arch_t* arch, char* type)
 	return NULL;
 }
 
+void ecs_add_component(arch_t* arch, char* type, size_t size, void* data)
+{
+	void* components = ecs_get_components(arch, type);
+
+	void* dest_address = &components[arch->cur * size];
+
+	memcpy(dest_address, data, size);
+
+	// increase cur placement of next component
+	arch->cur += 1;
+}
+
 int main(void)
 {
 	world_t* world = ecs_new_world();
@@ -225,6 +237,25 @@ int main(void)
 		// for int i = 0 to archetype.cur:
 			// positions[i]
 			// rotations[i]
+
+	/*
+	pos3_t* positions = ecs_get_components(&arch1, "pos3");
+
+	// set component data
+	for (int i = 0; i < CHUNK_SIZE; i++)
+	{
+		positions[i] = (pos3_t){0.3, 2.4, 2.3};
+	}
+	* SEE BELOW FOR IMPORVED VERSION */
+	ecs_add_component(&arch1, "pos3", sizeof(pos3_t), &(pos3_t){0.5, 3.4, 3.4});
+
+
+	pos3_t* positions = ecs_get_components(&arch1, "pos3");
+	// print component data
+	for (int i = 0; i < CHUNK_SIZE; i++)
+	{
+		printf("pos %i: (%f, %f, %f)\n", i, positions[i].a, positions[i].b, positions[i].c);
+	}
 	
 	ecs_free_world(world);
 }
